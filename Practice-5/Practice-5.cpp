@@ -11,40 +11,22 @@ void drawGraph(sf::RenderWindow& window, std::function<float(float)> func, float
     sf::VertexArray graph(sf::LinesStrip);
 
     for (float x = xMin; x <= xMax; x += 0.1f) {
-        float y = func(x); // Вычисление значения функции
+        float y = func(x); // Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё
 
-        // Преобразование координат в экранные
+        // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РєРѕРѕСЂРґРёРЅР°С‚ РІ СЌРєСЂР°РЅРЅС‹Рµ
         float screenX = 400 + x * scaleX;
         float screenY = 300 - y * scaleY;
 
-        // Добавление точки в массив вершин
+        // Р”РѕР±Р°РІР»РµРЅРёРµ С‚РѕС‡РєРё РІ РјР°СЃСЃРёРІ РІРµСЂС€РёРЅ
         graph.append(sf::Vertex(sf::Vector2f(screenX, screenY), color));
     }
 
     window.draw(graph);
 }
 
-string getSection(double x, double y) {
-
-    if (y < x && y > (3 * abs(x) - 9)) 
-        return "Section 1";
-
-    if (y > x && y > (3 * abs(x) - 9)) 
-        return "Section 2";
-
-    if (y > x && (y < (3 * abs(x) - 9)) && x < 0) 
-        return "Section 4";
-
-    if (y > x && (y > (- 3 * abs(x) + 9))) 
-        return "Section 3";
-
-    return "None";
-}
-
-
 int main()
 {
-    RenderWindow window(sf::VideoMode(800, 600), "Graph control");
+    RenderWindow window(VideoMode(800, 600), "Graph control");
 
   
     CircleShape userPoint(5); 
@@ -62,19 +44,21 @@ int main()
     coordinatesText.setPosition(10, 10);
 
 
-    // Оси X и Y
-    sf::VertexArray xAxis(sf::Lines, 2);
-    xAxis[0].position = Vector2f(50, 300); // Начало оси X
-    xAxis[0].color = Color::White; // Цвет оси
-    xAxis[1].position = Vector2f(750, 300); // Конец оси X
+    // РћСЃРё X Рё Y
+    sf::VertexArray xAxis(Lines, 2);
+    xAxis[0].position = Vector2f(50, 300); // РќР°С‡Р°Р»Рѕ РѕСЃРё X
+    xAxis[0].color = Color::White; // Р¦РІРµС‚ РѕСЃРё
+    xAxis[1].position = Vector2f(750, 300); // РљРѕРЅРµС† РѕСЃРё X
     xAxis[1].color = Color::White;
 
-    sf::VertexArray yAxis(sf::Lines, 2);
-    yAxis[0].position = sf::Vector2f(400, 50); // Начало оси Y
-    yAxis[0].color = sf::Color::White; // Цвет оси
-    yAxis[1].position = sf::Vector2f(400, 550); // Конец оси Y
-    yAxis[1].color = sf::Color::White;
+    sf::VertexArray yAxis(Lines, 2);
+    yAxis[0].position = Vector2f(400, 50); // РќР°С‡Р°Р»Рѕ РѕСЃРё Y
+    yAxis[0].color = Color::White; // Р¦РІРµС‚ РѕСЃРё
+    yAxis[1].position = Vector2f(400, 550); // РљРѕРЅРµС† РѕСЃРё Y
+    yAxis[1].color = Color::White;
 
+
+    string section;
     while (window.isOpen()) {
         Event event;
 
@@ -89,37 +73,38 @@ int main()
                     Vector2i mousePos = Mouse::getPosition(window);
 
                     float mathX = (mousePos.x - 400) / 30.0f;
-                    float mathY = -(mousePos.y - 300) / 90.0f;
+                    float mathY = -(mousePos.y - 300) / 100.0f;
 
                     userPoint.setPosition(mousePos.x - userPoint.getRadius(), mousePos.y - userPoint.getRadius());
                     userPointExists = true;
 
-                    double normalizeYCoordinate = round(mathY * 10);
-                    double normalizeXCoordinate = round(mathX);
+                    double y = round(mathY * 10);
+                    double x = round(mathX);
 
-                    double graphLiniar = normalizeXCoordinate;
-                    double graphABS = 3 * abs(normalizeXCoordinate) - 9;
+                    if (y == x || y == (3 * abs(x) - 9) || y == (-3 * abs(x) - 9))
+                        section =  "Border";
 
-                    string specialPosition = "None";
+                    if (y < x && y > (3 * abs(x) - 9))
+                        section =  "1";
+                    else if (y > x && (y > (3 * abs(x) - 9)))
+                        section = "2";
+                    else if (y > x && x > 0 && y > 0 && y < (3 * abs(x) - 9))
+                        section = "3";
+                    else if (y > x && (y < (3 * abs(x) - 9)))
+                        section =  "4";
+                    else if (y < x && (y < (3 * abs(x) - 9))) 
+                        section =  "5";
 
-                    if (normalizeYCoordinate == graphLiniar)
-                        specialPosition = "Linear graph";
-
-                    else if (normalizeYCoordinate == -graphABS || normalizeYCoordinate == graphABS) 
-                        specialPosition = "ABS graph";
-
-
-                    coordinatesText.setString("Coordinates: (" + std::to_string(mathX) + ", " + std::to_string(mathY) + ") Position: " + (getSection(normalizeXCoordinate, normalizeYCoordinate) + ";" + specialPosition));
+                    coordinatesText.setString("Coordinates: (" + std::to_string(mathX) + ", " + std::to_string(mathY) + ") Position: " + section);
 
                 }
                   
             }
         }
 
-
         window.clear();
 
-        // Отрисовка осей
+        // РћС‚СЂРёСЃРѕРІРєР° РѕСЃРµР№
         window.draw(xAxis);
         window.draw(yAxis);
 
