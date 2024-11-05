@@ -23,7 +23,7 @@ void task1(const int* arrA, const int* arrB, int size) {
 
     for (int i = 0; i < size; i++) {
         cout << "A (Del/Source): " << static_cast<double>(arrA[i]) / maximumA << " " << arrA[i] << endl;
-        cout << "B (Del/Source): " << static_cast<double>(arrA[i]) / maximumB << " " << arrA[i] << endl;
+        cout << "B (Del/Source): " << static_cast<double>(arrB[i]) / maximumB << " " << arrB[i] << endl;
     }
 
     cout << endl;
