@@ -1,0 +1,6 @@
+﻿  UnitTest.cpp
+D:\Study\infa\Visual projects\UnitTest\UnitTest.cpp(15,9): warning C4804: <=: небезопасное использование типа "bool" в операции
+D:\Study\infa\Visual projects\UnitTest\UnitTest.cpp(16,11): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+D:\Study\infa\Visual projects\UnitTest\UnitTest.cpp(17,11): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+D:\Study\infa\Visual projects\UnitTest\UnitTest.cpp(29,1): warning C4715: calc_func: значение возвращается не при всех путях выполнения
+  UnitTest.vcxproj -> D:\Study\infa\Visual projects\UnitTest\x64\Debug\UnitTest.exe
